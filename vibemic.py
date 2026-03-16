@@ -12,6 +12,7 @@ from pathlib import Path
 from openai import OpenAI
 from pynput import keyboard
 from PIL import Image, ImageDraw
+from Xlib import X, display as xdisplay, XK
 
 # ─── Paths ───
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -706,6 +707,16 @@ def main():
         global recording_process
         if recording_process:
             recording_process.kill()
+        # Ungrab PgDn
+        if xdpy:
+            try:
+                root = xdpy.screen().root
+                keycode = xdpy.keysym_to_keycode(XK.XK_Next)
+                for mod_mask in [0, X.Mod2Mask, X.LockMask, X.Mod2Mask | X.LockMask]:
+                    root.ungrab_key(keycode, mod_mask)
+                xdpy.flush()
+            except Exception:
+                pass
         icon.stop()
 
     tray.menu = pystray.Menu(
@@ -716,7 +727,22 @@ def main():
         pystray.MenuItem("Quit", quit_app),
     )
 
-    # Global hotkey listener
+    # Grab PgDn at X11 level so it won't reach the focused app
+    xdpy = None
+    try:
+        xdpy = xdisplay.Display()
+        root = xdpy.screen().root
+        keycode = xdpy.keysym_to_keycode(XK.XK_Next)  # PgDn
+        # Grab plain PgDn + common lock-modifier combos (NumLock=Mod2, CapsLock=Lock)
+        for mod_mask in [0, X.Mod2Mask, X.LockMask, X.Mod2Mask | X.LockMask]:
+            root.grab_key(keycode, mod_mask, True, X.GrabModeAsync, X.GrabModeAsync)
+        xdpy.flush()
+        print("PgDn grabbed — key won't reach other apps.")
+    except Exception as e:
+        print(f"Warning: Could not grab PgDn at X11 level: {e}")
+        print("PgDn may still move cursor in focused applications.")
+
+    # Global hotkey listener (pynput XRecord still sees grabbed keys)
     def on_press(key):
         if key == RECORD_KEY:
             on_hotkey(tray, update_tray)
