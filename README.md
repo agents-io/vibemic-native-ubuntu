@@ -1,5 +1,9 @@
 # VibeMic Native (Ubuntu)
 
+[中文版](#中文) | English
+
+![VibeMic](vibemic-slide.png)
+
 System-wide voice-to-text for Ubuntu. Press PgDn to record, press again to transcribe with OpenAI Whisper and instantly paste into any app.
 
 ## How it works
@@ -82,9 +86,44 @@ Text is copied to clipboard via `xclip` and pasted with `xdotool key ctrl+v` —
 
 ## Related
 
-- [VibeMic VS Code Extension](https://github.com/ithiria894/VibeMic) — voice-to-text inside VS Code
-- [VibeMic Native macOS](https://github.com/ithiria894/vibemic-native-macos) — macOS version
+- [VibeMic Native macOS](https://github.com/agents-io/vibemic-native-macos) — macOS version
 
 ## License
 
 MIT
+
+---
+
+<a name="中文"></a>
+## 中文
+
+![VibeMic](vibemic-slide-zh.png)
+
+全系統語音轉文字 Ubuntu 應用。按 PgDn 錄音，再按一次自動用 OpenAI Whisper 轉錄，並即時貼上到任何應用程式。
+
+### 運作方式
+
+1. 按 `PgDn` — 開始錄音，系統匣圖示變紅
+2. 再按 `PgDn` — 音訊傳送至 OpenAI Whisper
+3. 轉錄文字透過剪貼簿貼上到目前視窗
+
+### 功能特色
+
+- **全系統** — 適用於任何應用程式
+- **一鍵切換** — PgDn 開始/停止錄音
+- **即時貼上** — 剪貼簿 + Ctrl+V，支援中日韓文字
+- **轉錄記錄** — 所有轉錄自動保存，可從系統匣選單瀏覽和複製
+- **瀏覽器設定** — 從系統匣圖示開啟設定頁面
+- **多語言支援** — 廣東話、英文、普通話、日文等 97+ 種語言
+- **多模型** — whisper-1、gpt-4o-transcribe、gpt-4o-mini-transcribe
+
+### 快速開始
+
+```bash
+git clone https://github.com/agents-io/vibemic-native-ubuntu.git
+cd vibemic-native-ubuntu
+chmod +x setup.sh && ./setup.sh
+python3 vibemic.py
+```
+
+詳細設定步驟請參考上方英文版。
